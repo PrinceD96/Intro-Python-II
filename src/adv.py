@@ -1,10 +1,14 @@
 from room import Room
+from player import Player
+import random
+from os import system, name
+from colorama import Fore, Back, Style
 
 # Declare all the rooms
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+                     "North of you, the cave mount beckons",),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -24,14 +28,64 @@ earlier adventurers. The only exit is to the south."""),
 
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room["outside"].n_to = room["foyer"]
+room["foyer"].s_to = room["outside"]
+room["foyer"].n_to = room["overlook"]
+room["foyer"].e_to = room["narrow"]
+room["overlook"].s_to = room["foyer"]
+room["narrow"].w_to = room["foyer"]
+room["narrow"].n_to = room["treasure"]
+room["treasure"].s_to = room["narrow"]
+
+# Clear the terminal for better readability
+
+
+def clear_terminal():
+    if name == 'nt':
+        system('cls')
+    else:
+        system('clear')
+
+
+# Select a random room
+initial_room = random.choice(list(room.values()))
+clear_terminal()
+
+# Get the user's name and create a player with it and place them at the initial room
+name = input("\nHello there human!\n\nPlease enter your name: ")
+player1 = Player(name, initial_room)
+
+clear_terminal()
+print(
+    f"\nWelcome to the Adventure Game, {player1.name}!\n\nYou have been randomly placed in room {player1.current_room.name}\nType 'h' or 'help' to read the instructions"
+)
+
+instructions = "".join(
+    (
+        "\n\nINSTRUCTIONS: \n\n",
+        "Press 'n' to go North, 'e' to go East, 's' to go South, or 'w' to go West!\n",
+        "To take an item, type 'take [item_name]' or 'get [item_name]'\n",
+        "To drop an item, type 'drop [item_name]'\n",
+        "To check your inventory, type 'i' or 'inventory'\n"
+        "To quit press 'q'\n\n",
+    )
+)
+
+is_playing = True
+while is_playing:
+    cmd = input('> ')
+    if cmd == "q":
+        print(f"\nGoodbye, {player1.name}!")
+        # is_playing = False
+    if cmd == "help" or cmd == "h":
+        clear_terminal()
+        print(instructions)
+
+    else:
+        clear_terminal()
+        player1.move(cmd)
+        # print(f"Oops... Command not valid. Press 'h' to read instructions!")
+
 
 #
 # Main
