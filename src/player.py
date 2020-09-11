@@ -1,6 +1,6 @@
 # Write a class to hold player information, e.g. what room they are in
 # currently.
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 
 
 class Player:

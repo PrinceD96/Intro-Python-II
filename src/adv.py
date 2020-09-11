@@ -3,7 +3,7 @@ from player import Player
 from item import Item
 import random
 from os import system, name
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 
 # Declare the items
 
@@ -79,6 +79,7 @@ instructions = "".join(
 )
 
 is_playing = True
+
 while is_playing:
     cmd = input('> ')
 
@@ -100,6 +101,36 @@ while is_playing:
         if len(cmd) == 1:
             clear_terminal()
             player1.move(cmd[0])
+
+        elif len(cmd) == 2:
+            # clear_terminal()
+
+            if cmd[0] == 'get' or cmd[0] == 'take':
+                item_to_take = cmd[1]
+
+                for item in player1.current_room.items:
+                    if item.name == item_to_take:
+                        item_to_take = item
+                        item_to_take.add_to_player(player1)
+                        break
+
+                else:
+                    print(
+                        f'\n{Fore.RED}{item_to_take} is not available in this room!{Style.RESET_ALL}')
+
+            elif cmd[0] == 'drop':
+                item_to_drop = cmd[1]
+
+                for item in player1.inventory:
+                    if item.name == item_to_drop:
+                        item_to_drop = item
+                        item_to_drop.remove_from_player(player1)
+                        break
+
+                else:
+                    print(
+                        f"{Fore.RED}You can't drop {item_to_drop} because it's not in your inventory!{Style.RESET_ALL}")
+
 
 #
 # Main
