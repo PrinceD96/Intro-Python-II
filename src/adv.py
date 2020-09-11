@@ -30,6 +30,7 @@ to north. The smell of gold permeates the air."""),
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south.""", [shield]),
+    'dome':     Room("Dome", """There's only a way in, you can't escape from this room.""", [sword, shield])
 }
 
 
@@ -43,6 +44,8 @@ room["overlook"].s_to = room["foyer"]
 room["narrow"].w_to = room["foyer"]
 room["narrow"].n_to = room["treasure"]
 room["treasure"].s_to = room["narrow"]
+room["treasure"].n_to = room["dome"]
+room["dome"].s_to = room["treasure"]
 
 # Clear the terminal for better readability
 
