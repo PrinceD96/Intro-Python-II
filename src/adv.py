@@ -1,17 +1,24 @@
 from room import Room
 from player import Player
+from item import Item
 import random
 from os import system, name
 from colorama import Fore, Back, Style
+
+# Declare the items
+
+sword = Item("sword", "This weapon makes you powerful")
+shield = Item("shield", "Gives you the most protection")
+axe = Item("axe", "Heavy but dangerous")
 
 # Declare all the rooms
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons",),
+                     "North of you, the cave mount beckons", [sword, shield]),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+passages run north and east.""", [axe, sword]),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
@@ -22,7 +29,7 @@ to north. The smell of gold permeates the air."""),
 
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south."""),
+earlier adventurers. The only exit is to the south.""", [shield]),
 }
 
 
@@ -57,12 +64,12 @@ player1 = Player(name, initial_room)
 
 clear_terminal()
 print(
-    f"\nWelcome to the Adventure Game, {player1.name}!\n\nYou have been randomly placed in room {player1.current_room.name}\nType 'h' or 'help' to read the instructions"
+    f"\nWelcome to the Adventure Game, {player1.name}!\n\nYou have been randomly placed in room {player1.current_room.name}\n\n{Fore.CYAN}Type 'h' or 'help' to read the instructions{Style.RESET_ALL}"
 )
 
 instructions = "".join(
     (
-        "\n\nINSTRUCTIONS: \n\n",
+        f"\n\n{Fore.CYAN}INSTRUCTIONS: \n\n",
         "Press 'n' to go North, 'e' to go East, 's' to go South, or 'w' to go West!\n",
         "To take an item, type 'take [item_name]' or 'get [item_name]'\n",
         "To drop an item, type 'drop [item_name]'\n",
@@ -74,18 +81,25 @@ instructions = "".join(
 is_playing = True
 while is_playing:
     cmd = input('> ')
+
     if cmd == "q":
-        print(f"\nGoodbye, {player1.name}!")
-        # is_playing = False
+        print(f"\nGoodbye, {player1.name}!\n")
+        is_playing = False
+        break
+
     if cmd == "help" or cmd == "h":
         clear_terminal()
         print(instructions)
 
-    else:
+    elif cmd == "i" or cmd == "inventory":
         clear_terminal()
-        player1.move(cmd)
-        # print(f"Oops... Command not valid. Press 'h' to read instructions!")
+        player1.print_inventory()
 
+    else:
+        cmd = cmd.split(' ')
+        if len(cmd) == 1:
+            clear_terminal()
+            player1.move(cmd[0])
 
 #
 # Main
